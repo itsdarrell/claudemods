@@ -1,0 +1,12 @@
+{
+  "name": "darrell-mods",
+  "owner": { "name": "Darrell" },
+  "description": "Darrell's Claude Code mods and skills",
+  "plugins": [
+    {
+      "name": "context-bar",
+      "source": "./plugins/context-bar",
+      "description": "Context window as a stacked bar above the prompt; toggle with /context-bar"
+    }
+  ]
+}
