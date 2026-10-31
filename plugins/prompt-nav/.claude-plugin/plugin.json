@@ -1,5 +1,6 @@
 {
   "name": "prompt-nav",
   "version": "0.1.0",
-  "description": "A side pane listing your previous prompts; press one to jump the transcript to it. Toggle with /questions"
+  "description": "A side pane listing your previous prompts; press one to jump the transcript to it. Toggle with /questions",
+  "types": "./types/index.d.ts"
 }

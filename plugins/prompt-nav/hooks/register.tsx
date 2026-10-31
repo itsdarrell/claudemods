@@ -1,11 +1,16 @@
+import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
+
+import type { Row } from '../types'
 
 import { flat, isPrompt, label, pair } from './label'
 
 const PANE = 'prompt-nav'
 const ACCENT = '#7aa2f7'
 
-type Prompt = { id: string; text: string }
+const rowsAtom = atom({ plugin: 'prompt-nav', key: 'rows' } as const, [])
+const visibleAtom = atom({ plugin: 'prompt-nav', key: 'visible' } as const, [])
+const turnsAtom = atom({ plugin: 'prompt-nav', key: 'turns' } as const, 0)
 
 /** The prompts the person typed, oldest first, from the stored conversation. */
 async function conversation($: EngineInterface) {
@@ -18,8 +23,12 @@ export const register: Register = on => {
   // The list and its order come from the conversation; a prompt's jump target
   // (its row's render requestId, what $.ui.scroll reveals) is learned when
   // the transcript draws that row.
-  const prompts: Prompt[] = []
+  // What the transcript drew, mirrored here and flushed to $.state just after
+  // the draw (a render hook may not write). Only the pane reads that state, so
+  // only the pane redraws: the transcript is never invalidated.
+  const prompts: Row[] = []
   const visible = new Set<string>()
+  let isFlushing = false
 
   on('session.start', async ($, e, next) => {
     await $.command.register({
@@ -30,8 +39,8 @@ export const register: Register = on => {
     return next(e)
   })
 
-  on('turn.complete', ($, e, next) => {
-    $.ui.invalidate('ui.render')
+  on('turn.complete', async ($, e, next) => {
+    await update($, turnsAtom, n => n + 1)
 
     return next(e)
   })
@@ -86,7 +95,19 @@ export const register: Register = on => {
       }
     }
 
-    if (changed) $.ui.invalidate('ui.render')
+    if (changed && !isFlushing) {
+      isFlushing = true
+      void $.clock
+        .sleep(0)
+        .then(async () => {
+          isFlushing = false
+          await update($, rowsAtom, () => prompts.map(p => ({ ...p })))
+          await update($, visibleAtom, () => [...visible])
+        })
+        .catch(() => {
+          isFlushing = false
+        })
+    }
 
     return next(e)
   })
@@ -94,7 +115,10 @@ export const register: Register = on => {
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const { Box, Button, Text } = $.ui.resolve(e)
     const rail = { flexDirection: 'column' } as const
-    const list = pair(await conversation($), prompts)
+    await read($, turnsAtom)
+    const rows = await read($, rowsAtom)
+    const shown = new Set(await read($, visibleAtom))
+    const list = pair(await conversation($), rows)
 
     if (list.length === 0) {
       return (
@@ -110,7 +134,7 @@ export const register: Register = on => {
     return (
       <Box {...rail}>
         {list.map((p, i) => {
-          const isShown = p.id !== undefined && visible.has(p.id)
+          const isShown = p.id !== undefined && shown.has(p.id)
           const rowKey = p.id ?? `n${i}`
           const n = String(i + 1).padStart(digits)
 
