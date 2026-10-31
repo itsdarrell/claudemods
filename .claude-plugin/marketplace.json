@@ -1,12 +1,19 @@
 {
   "name": "darrell-mods",
-  "owner": { "name": "Darrell" },
+  "owner": {
+    "name": "Darrell"
+  },
   "description": "Darrell's Claude Code mods and skills",
   "plugins": [
     {
       "name": "context-bar",
       "source": "./plugins/context-bar",
       "description": "Context window as a stacked bar above the prompt; toggle with /context-bar"
+    },
+    {
+      "name": "prompt-nav",
+      "source": "./plugins/prompt-nav",
+      "description": "A slim side rail of your previous prompts; hover for the full text, press to jump. Toggle with /questions"
     }
   ]
 }

@@ -17,6 +17,7 @@ Answer `y` to add the marketplace the first time, then pick the user scope.
 | Name | What it does |
 | --- | --- |
 | [context-bar](plugins/context-bar) | Draws the context window as a small stacked bar with a legend above the prompt, one color per `/context` category. `/context-bar` toggles it. |
+| [prompt-nav](plugins/prompt-nav) | A slim rail on the right listing your previous prompts, the ones on screen highlighted. Hover for the full text, press one to jump to it (fullscreen mode). `/questions` toggles it. |
 
 ## Adding one
 
