@@ -48,9 +48,11 @@ export const register: Register = on => {
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
-    if (e.props.hasSurvey || !(await read($, isOn))) return next(e)
+    // Another plugin's band (usage-bar, say) is drawn on the bar's right.
+    const beside = await next(e)
+    if (e.props.hasSurvey || !(await read($, isOn))) return beside
     const snap: Snapshot | null = await read($, snapshot)
-    if (!snap || snap.segments.length === 0) return next(e)
+    if (!snap || snap.segments.length === 0) return beside
 
     const { Box, Text } = $.ui.resolve(e)
     const columns = e.props.bodyColumns ?? e.viewport?.columns ?? 80
@@ -61,25 +63,28 @@ export const register: Register = on => {
     const legend = fitLegend(snap.segments, columns - 10)
 
     return (
-      <Box flexDirection="column" borderStyle="round" borderDimColor paddingX={1} alignSelf="flex-start">
-        <Box key="bar">
-          {snap.segments.map((s, i) => (
-            <Text key={`seg-${i}`} color={colors[i]}>
-              {(s.kind === 'used' ? '━' : '─').repeat(cells[i]!)}
+      <Box flexDirection="row" flexWrap="wrap" columnGap={1}>
+        <Box key="context" flexDirection="column" borderStyle="round" borderDimColor paddingX={1} alignSelf="flex-start">
+          <Box key="bar">
+            {snap.segments.map((s, i) => (
+              <Text key={`seg-${i}`} color={colors[i]}>
+                {(s.kind === 'used' ? '━' : '─').repeat(cells[i]!)}
+              </Text>
+            ))}
+            <Text key="total" dimColor>
+              {` ${snap.percentage}% · ${formatTokens(snap.totalTokens)}/${formatTokens(snap.maxTokens)}`}
             </Text>
-          ))}
-          <Text key="total" dimColor>
-            {` ${snap.percentage}% · ${formatTokens(snap.totalTokens)}/${formatTokens(snap.maxTokens)}`}
-          </Text>
+          </Box>
+          <Box key="legend">
+            {legend.map(({ i, text }) => (
+              <Box key={`leg-${i}`} marginRight={1}>
+                <Text color={colors[i]}>● </Text>
+                <Text dimColor>{text}</Text>
+              </Box>
+            ))}
+          </Box>
         </Box>
-        <Box key="legend">
-          {legend.map(({ i, text }) => (
-            <Box key={`leg-${i}`} marginRight={1}>
-              <Text color={colors[i]}>● </Text>
-              <Text dimColor>{text}</Text>
-            </Box>
-          ))}
-        </Box>
+        {beside}
       </Box>
     )
   })

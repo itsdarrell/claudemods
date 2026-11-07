@@ -14,6 +14,11 @@
       "name": "prompt-nav",
       "source": "./plugins/prompt-nav",
       "description": "A slim side rail of your previous prompts; hover for the full text, press to jump. Toggle with /questions"
+    },
+    {
+      "name": "usage-bar",
+      "source": "./plugins/usage-bar",
+      "description": "5-hour and weekly plan usage meters with reset times, beside the context bar; toggle with /usage-bar"
     }
   ]
 }
