@@ -88,25 +88,50 @@ const SHORT: Record<string, string> = {
 export const shortName = (name: string): string =>
   SHORT[name] ?? name.split(' ')[0]!.toLowerCase()
 
+/** One character of the legend; no `color` draws it dim. */
+export type Cell = { ch: string; color?: string }
+/** Neighbouring cells of one color, drawn as one Text. */
+export type Run = { text: string; color?: string }
+
+const GAP = '   '
+
 /**
- * One-line legend of the `top` biggest used rows (`msgs 29.7k`), largest first,
- * dropping the tail past `columns`; free space and the buffer are left out.
+ * The legend as one strip (`● msgs 29.7k   ● tools 12.4k   `): the `top`
+ * biggest used rows, largest first; free space and the buffer are left out.
+ * Each entry ends with a gap, so the strip loops seamlessly.
  */
-export const fitLegend = (segments: Segment[], columns: number, top = 3) => {
+export const legendStrip = (segments: Segment[], colors: string[], top = 3): Cell[] => {
   const ranked = segments
     .map((s, i) => ({ s, i }))
     .filter(({ s }) => s.kind === 'used')
     .sort((a, b) => b.s.tokens - a.s.tokens)
     .slice(0, top)
 
-  const out: { i: number; text: string }[] = []
-  let used = 0
+  const cells: Cell[] = []
   for (const { s, i } of ranked) {
-    const text = `${shortName(s.name)} ${formatTokens(s.tokens)}`
-    const w = text.length + 3
-    if (used + w > columns) continue
-    used += w
-    out.push({ i, text })
+    cells.push({ ch: '●', color: colors[i] })
+    for (const ch of ` ${shortName(s.name)} ${formatTokens(s.tokens)}${GAP}`) cells.push({ ch })
   }
-  return out
+  return cells
+}
+
+/** Whether the strip, less its trailing gap, is wider than `width`. */
+export const scrolls = (strip: Cell[], width: number) => strip.length - GAP.length > width
+
+/**
+ * What the legend shows: the whole strip when it fits, else `width` cells of
+ * it from `offset`, wrapping around, so the box keeps one width as it moves.
+ */
+export const marquee = (strip: Cell[], offset: number, width: number): Run[] => {
+  const view = scrolls(strip, width)
+    ? Array.from({ length: width }, (_, k) => strip[(offset + k) % strip.length]!)
+    : strip.slice(0, Math.max(0, strip.length - GAP.length))
+
+  const runs: Run[] = []
+  for (const { ch, color } of view) {
+    const last = runs[runs.length - 1]
+    if (last && last.color === color) last.text += ch
+    else runs.push(color ? { text: ch, color } : { text: ch })
+  }
+  return runs
 }

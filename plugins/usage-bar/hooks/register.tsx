@@ -84,7 +84,7 @@ export const register: Register = on => {
                 <Text color={tone(percent)}>{'━'.repeat(filled)}</Text>
                 <Text dimColor>{'─'.repeat(empty)}</Text>
                 <Text>{` ${isReset ? '–' : `${Math.round(percent)}%`}`}</Text>
-                {resets ? <Text dimColor>{` · ${isReset ? 'reset' : `resets ${resets}`}`}</Text> : null}
+                {resets ? <Text dimColor>{` · ${resets}`}</Text> : null}
               </Box>
             )
           })}

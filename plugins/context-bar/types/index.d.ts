@@ -14,6 +14,6 @@ export type Snapshot = {
 
 declare module 'claude-code' {
   interface PluginState {
-    'context-bar': { isOn: boolean; snapshot: Snapshot | null }
+    'context-bar': { isOn: boolean; snapshot: Snapshot | null; offset: number; isScrolling: boolean }
   }
 }

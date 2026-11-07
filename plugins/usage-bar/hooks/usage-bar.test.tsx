@@ -65,7 +65,7 @@ test('the meters draw on the right of the band beneath', async ($, on) => {
     const ui = await $.ui.mount({ ...BAND, surface })
     expect((await ui.find({ type: 'Text', text: /context bar/ }))?.text).toBe('context bar')
     expect((await ui.find({ type: 'Text', text: /42%/ }))?.text).toBe(' 42%')
-    expect((await ui.find({ type: 'Text', text: /resets 2h 13m/ }))?.text).toBe(' · resets 2h 13m')
+    expect((await ui.find({ type: 'Text', text: /2h 13m/ }))?.text).toBe(' · 2h 13m')
     await ui.unmount()
   }
 })

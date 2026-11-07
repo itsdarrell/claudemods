@@ -1,6 +1,6 @@
 {
   "name": "usage-bar",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Plan usage meters (5-hour and weekly, with reset times) beside the context bar; toggle with /usage-bar",
   "license": "MIT",
   "types": "./types/index.d.ts"
