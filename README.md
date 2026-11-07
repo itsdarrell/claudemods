@@ -12,6 +12,15 @@ In a Claude Code terminal session, install any plugin below by name:
 
 Answer `y` to add the marketplace the first time, then pick the user scope.
 
+## Update
+
+To get the latest versions:
+
+```
+/plugin marketplace update
+/plugin update <name>
+```
+
 ## Plugins
 
 | Name | What it does |
@@ -20,6 +29,10 @@ Answer `y` to add the marketplace the first time, then pick the user scope.
 | [prompt-nav](plugins/prompt-nav) | A slim rail on the right listing your previous prompts, the ones on screen highlighted. Hover for the full text, press one to jump to it (fullscreen mode). `/questions` toggles it. |
 | [usage-bar](plugins/usage-bar) | Your plan usage beside the context bar: 5-hour and weekly meters with the percent used and when each resets. `/usage-bar` toggles it. |
 
-## Adding one
+## Contributing
 
-Put it in `plugins/<name>/` with its own `.claude-plugin/plugin.json` (and `hooks/` for a mod, `skills/<skill>/SKILL.md` for a skill), then add an entry to `.claude-plugin/marketplace.json`.
+Found a bug or have an idea? [Open an issue](../../issues). Want to fix or improve something? Fork the repo, make your change on a branch, and open a pull request. [CONTRIBUTING.md](CONTRIBUTING.md) has the details, including how to add a plugin of your own.
+
+## License
+
+[MIT](LICENSE)

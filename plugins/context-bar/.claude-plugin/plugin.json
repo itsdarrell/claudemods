@@ -2,5 +2,6 @@
   "name": "context-bar",
   "version": "0.1.0",
   "description": "Draws the context window as a stacked bar above the prompt, colored by /context category; toggle with /context-bar",
+  "license": "MIT",
   "types": "./types/index.d.ts"
 }
