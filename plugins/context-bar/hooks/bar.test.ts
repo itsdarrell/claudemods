@@ -29,12 +29,17 @@ test('/context-bar toggles', async $ => {
   expect(JSON.stringify(on)).toContain('on')
 })
 
-test('legend is short and fits one line', async () => {
+test('legend shows the top used rows, largest first, and fits one line', async () => {
   const segs = [
     { name: 'System prompt', tokens: 3100, color: '', kind: 'used' as const },
+    { name: 'System tools', tokens: 12400, color: '', kind: 'used' as const },
+    { name: 'Memory files', tokens: 800, color: '', kind: 'used' as const },
     { name: 'Messages', tokens: 29700, color: '', kind: 'used' as const },
+    { name: 'Free space', tokens: 120000, color: '', kind: 'free' as const },
     { name: 'Autocompact buffer', tokens: 33000, color: '', kind: 'buffer' as const },
   ]
-  expect(fitLegend(segs, 80).map(l => l.text)).toEqual(['sys 3.1k', 'msgs 29.7k', 'buffer 33.0k'])
-  expect(fitLegend(segs, 12)).toHaveLength(1)
+  const legend = fitLegend(segs, 80)
+  expect(legend.map(l => l.text)).toEqual(['msgs 29.7k', 'tools 12.4k', 'sys 3.1k'])
+  expect(legend.map(l => l.i)).toEqual([3, 1, 0])
+  expect(fitLegend(segs, 14)).toHaveLength(1)
 })

@@ -56,11 +56,13 @@ export const register: Register = on => {
 
     const { Box, Text } = $.ui.resolve(e)
     const columns = e.props.bodyColumns ?? e.viewport?.columns ?? 80
-    const width = Math.max(10, Math.min(40, columns - 28))
+    const width = Math.max(10, Math.min(20, columns - 28))
     const cells = allocate(snap.segments, width)
     const colors = paint(snap.segments)
 
-    const legend = fitLegend(snap.segments, columns - 10)
+    const total = ` ${snap.percentage}% · ${formatTokens(snap.totalTokens)}/${formatTokens(snap.maxTokens)}`
+    // The legend fits under the bar's own line, so the box stays as narrow as the bar.
+    const legend = fitLegend(snap.segments, width + total.length)
 
     return (
       <Box flexDirection="row" flexWrap="wrap" columnGap={1}>
@@ -72,7 +74,7 @@ export const register: Register = on => {
               </Text>
             ))}
             <Text key="total" dimColor>
-              {` ${snap.percentage}% · ${formatTokens(snap.totalTokens)}/${formatTokens(snap.maxTokens)}`}
+              {total}
             </Text>
           </Box>
           <Box key="legend">
