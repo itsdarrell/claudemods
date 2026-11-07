@@ -88,16 +88,25 @@ const SHORT: Record<string, string> = {
 export const shortName = (name: string): string =>
   SHORT[name] ?? name.split(' ')[0]!.toLowerCase()
 
-/** One-line legend entries (`sys 3.1k`), dropping the tail past `columns`. */
-export const fitLegend = (segments: Segment[], columns: number) => {
+/**
+ * One-line legend of the `top` biggest used rows (`msgs 29.7k`), largest first,
+ * dropping the tail past `columns`; free space and the buffer are left out.
+ */
+export const fitLegend = (segments: Segment[], columns: number, top = 3) => {
+  const ranked = segments
+    .map((s, i) => ({ s, i }))
+    .filter(({ s }) => s.kind === 'used')
+    .sort((a, b) => b.s.tokens - a.s.tokens)
+    .slice(0, top)
+
   const out: { i: number; text: string }[] = []
   let used = 0
-  segments.forEach((s, i) => {
+  for (const { s, i } of ranked) {
     const text = `${shortName(s.name)} ${formatTokens(s.tokens)}`
     const w = text.length + 3
-    if (used + w > columns) return
+    if (used + w > columns) continue
     used += w
     out.push({ i, text })
-  })
+  }
   return out
 }
