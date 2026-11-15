@@ -26,6 +26,7 @@ To get the latest versions:
 | Name | What it does |
 | --- | --- |
 | [context-bar](plugins/context-bar) | Draws the context window as a small stacked bar with a legend above the prompt, one color per `/context` category. `/context-bar` toggles it. |
+| [memory-pane](plugins/memory-pane) | A pane listing the CLAUDE.md files, auto-memory and settings in play: token cost per file, click one to read it, secrets in settings masked. A toast tells you whenever Claude saves to memory. `/memory-pane` toggles it. |
 | [prompt-nav](plugins/prompt-nav) | A slim rail on the right listing your previous prompts, the ones on screen highlighted. Hover for the full text, press one to jump to it (fullscreen mode). `/questions` toggles it. |
 | [usage-bar](plugins/usage-bar) | Your plan usage beside the context bar: 5-hour and weekly meters with the percent used and when each resets. `/usage-bar` toggles it. |
 
