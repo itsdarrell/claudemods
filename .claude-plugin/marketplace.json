@@ -19,6 +19,11 @@
       "name": "usage-bar",
       "source": "./plugins/usage-bar",
       "description": "5-hour and weekly plan usage meters with reset times, beside the context bar; toggle with /usage-bar"
+    },
+    {
+      "name": "memory-pane",
+      "source": "./plugins/memory-pane",
+      "description": "A pane of the CLAUDE.md, memory and settings files in play, with token costs, and a toast when Claude saves to memory; toggle with /memory-pane"
     }
   ]
 }

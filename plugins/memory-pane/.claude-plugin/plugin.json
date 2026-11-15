@@ -1,0 +1,7 @@
+{
+  "name": "memory-pane",
+  "version": "0.1.0",
+  "description": "A pane of the CLAUDE.md, memory and settings files in play, with token costs, plus a toast whenever Claude saves to memory; toggle with /memory-pane",
+  "license": "MIT",
+  "types": "./types/index.d.ts"
+}
